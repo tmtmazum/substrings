@@ -1,19 +1,22 @@
 # substrings
 ## Solution Algorithm
-The solution uses a multi-threaded divide-and-conquer approach with all threads sharing a trie to find substring matches across threads. The trie is constructed with the set of common words. Once constructed the trie is kept constant to allow it to be shared across all threads without any possibility of data races.
+The solution uses a multi-threaded divide-and-conquer approach with all threads sharing a trie to find substring matches. The trie is constructed with the set of common words. Once constructed the trie is kept constant to allow it to be shared across all threads without any possibility of data races.
 
-Once the trie is constructed, space is allocated in a vector for each of the words in allwords.txt. The words are then divided evenly across the number of threads. (e.g. for 7 total words and 2 threads, thread 0 gets words 0-3, thread 1 gets words 4-6). This is implemented in 
+Once the trie is constructed, space is allocated in a vector for each of the words in allwords.txt. The words are then divided evenly across the number of threads. (e.g. for 7 total words and 2 threads, thread 0 gets words 0-3, thread 1 gets words 4-6). This is implemented in `substrings.cpp / find_matches(..)`.
 
-Each thread loops through its set of assigned words and finds all possible matches within the trie. The algorithm for finding all matches within a single word uses a doubly-linked list of trie nodes to keep track of all running matches. This is implemented in `trie.cpp` in `trie_impl::find_matches`.
+Each thread loops through its set of assigned words and finds all possible matches within the trie. The algorithm for finding all matches within a single word uses a doubly-linked list of trie nodes to keep track of all running matches. This is implemented in `trie.cpp / trie_impl::find_matches`. See directory layout below for more info.
 
-### Usage
+The front-end command-line for parsing the input files is implemented in `main.cpp`.
+
+### Command-Line Usage
 ```
 ./substrings-client.exe <all-words-file> <common-words-file> [num_threads]
 ```
 num\_threads:
     optional argument for specifying number of additional threads to use in computation. If no value is specified `std::thread::hardware_concurrency` is used, which returns the number of available hardware threads.
 
-### Build Dependencies
+## Build
+### Dependencies
 - Tools
     - [CMake (3.18 or higher)](https://cmake.org/download/)
     - [Visual Studio 16 2019](https://visualstudio.microsoft.com/downloads/) or similar IDE/compiler that supports C++17
@@ -21,7 +24,7 @@ num\_threads:
     - googletest (included in source, for building unit test executable)
 
 ### Building on Windows w/ Visual Studio 2019
-The easiest way to build on Windows is to install CMake and then invoke the pre-configured batch file `generate_vs2019.bat`. The script should invoke CMake to generate the appropriate Visual Studio solution files in the `build/` folder.
+The easiest way to build on Windows is to install CMake and invoke the batch file `generate_vs2019.bat`. The script should invoke CMake to generate the appropriate Visual Studio solution files in the `build/` folder.
 
 Alternatively, you can run `generate_vs2019_skip_tests.bat` to generate build files for only the core solution executable without any unit tests. This mode does not consume googletest as a dependency.
 
@@ -49,8 +52,8 @@ All compiled binaries will be put in the ROOT/bin/Debug folder for debug bulds a
 - substrings-test
     - unit test executable
 
-### File Structure
-#### Source Code
+## File Structure
+### Source Code
             
 - ROOT/include
     - public headers for substring matching implementation
@@ -65,14 +68,14 @@ All compiled binaries will be put in the ROOT/bin/Debug folder for debug bulds a
 - ROOT/test/substrings-test
     - unit tests
 
-#### Generated Artifacts
+### Generated Artifacts
 - ROOT/bin/{Debug|Release}
     - output binaries (executables and libs) are put here
 
 - ROOT/build
     - solution files are generated here after invoking CMake
 
-#### External Deps
+### External Deps
 - ROOT/external/googletest
     - source copy of google test library
 
