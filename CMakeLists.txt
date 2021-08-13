@@ -7,6 +7,10 @@ if (MSVC)
     set(CMAKE_CXX_FLAGS_RELEASE "/MT /Zi /WX")
 endif()
 
+if (NOT CMAKE_BUILD_TYPE MATCHES Debug)
+    add_definitions(-DNDEBUG)
+endif()
+
 ## Output
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
@@ -19,7 +23,9 @@ include_directories(include)
 add_subdirectory(src/substrings-lib)
 add_subdirectory(src/substrings-client)
 
-if (NOT DEFINED CACHE{skip-tests})
+if (DEFINED CACHE{skip-tests})
+    message("skipping unit tests -- ${skip-tests}")
+else()
     include_directories(external/googletest/include)
     include_directories(external/googletest)
     add_subdirectory(external/googletest/src)
