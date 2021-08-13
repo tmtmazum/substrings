@@ -1,3 +1,4 @@
+#pragma once
 #include <memory>
 #include <vector>
 #include <string>
@@ -17,6 +18,7 @@ public:
 };
 
 
+//! Build trie data structure from a set of common words
 std::shared_ptr<trie> build_trie(std::vector<std::string> const& words);
 
 } // namespace substrings

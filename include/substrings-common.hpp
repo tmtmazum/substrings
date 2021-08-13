@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdio>
+
 #ifndef LOG_ALWAYS
 #   define LOG_ALWAYS(...) printf(__VA_ARGS__)
 #endif

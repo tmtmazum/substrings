@@ -17,9 +17,10 @@ struct char_hash
 
     size_t operator()(char const c) const noexcept
     {
-        if (c < 'a' || c > 'z')
+        // use fallback hash if its outside the common ascii set
+        if (c < ' ' || c > '~')
             return fallback_hash(c);
-        return static_cast<size_t>(c) - 'a';
+        return static_cast<size_t>(c) - ' ';
     }
 };
 
@@ -121,23 +122,23 @@ public:
                 {
                     to_remove.emplace_back(it);
                 }
-            }
+            } // O(k) where k:max number of simultaneous running matches
 
             for (auto const& rm : to_remove)
             {
                 partial_matches.erase(rm);
             }
             partial_matches.splice(partial_matches.end(), std::move(to_add));
-        }
+        } // O(k*m) where m:word.size() and k:max number of simultaneous matches
 
-        std::sort(matches.begin(), matches.end());
+        std::sort(matches.begin(), matches.end()); // O(n log n) where n: number of matches
 
         // remove duplicates
         auto const last = std::unique(matches.begin(), matches.end());
         matches.erase(last, matches.end());
 
         return matches;
-    }
+    } // O(max(m, n log n)) where m:size of word, n:number of matches within word
 
 private:
     trie_node m_master_node;
