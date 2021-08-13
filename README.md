@@ -8,6 +8,9 @@ Each thread loops through its set of assigned words and finds all possible match
 
 The front-end command-line for parsing the input files is implemented in `main.cpp`.
 
+Est. Time Complexity: **O(n)** where n:number of *characters* in allwords.txt
+Est. Space Complexity: **O(m + n)** where m:number of *characters* in commonwords.txt. The trie uses **O(m)** space and the output vector uses **O(n)** space.
+(The space complexity could be further optimized by using `std::string_view` to avoid making copies for the output vector).
 ### Command-Line Usage
 ```
 ./substrings-client.exe <all-words-file> <common-words-file> [num_threads]
